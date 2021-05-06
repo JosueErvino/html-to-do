@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Tarefas</title>
+</head>
+<body>
+    <h1>Lista de tarefas - HTML/JS</h1>
+    <div>
+        <label for="nova-tarefa">Nova tarefa: </label>
+        <br>
+        <input type="text" name="nova-tarefa" id="nova-tarefa">
+        <button onclick="addTarefa()">Adicionar</button>
+    </div>
+    <div>
+        <ul id="tarefas"></ul>
+    </div>
+
+    <script>
+        const divTarefas = document.getElementById('tarefas')
+        const inputNovaTarefa = document.getElementById('nova-tarefa')
+
+        const listaTarefas = []
+
+        const atualizarTarefas = () => {
+            divTarefas.innerHTML = ''
+            if (!listaTarefas.length) {
+                divTarefas.innerHTML = `
+                    <p>Nenhuma tarefa pendente.</p>
+                `
+                return
+            }
+            listaTarefas.forEach((item, index) => {
+                const tarefa = item.concluido ? `<s>${item.tarefa}</s>` : `<strong>${item.tarefa}</strong>`
+                divTarefas.innerHTML = divTarefas.innerHTML + `
+                    <li>
+                        <button onclick='concluirTarefa(${index})'>✔</button>
+                        <button onclick='removerTarefa(${index})'>✘</button>
+                        ${tarefa}
+                    </li>
+                `
+            })
+        }
+
+        atualizarTarefas()
+
+        const addTarefa = () => {
+            if (inputNovaTarefa.value) {
+                listaTarefas.push({
+                    tarefa: inputNovaTarefa.value,
+                    concluido: false
+                })
+                inputNovaTarefa.value = ''
+
+                atualizarTarefas()
+            }
+        }
+
+        const removerTarefa = (i) => {
+            listaTarefas.splice(i, 1)
+            atualizarTarefas()
+        }
+
+        const concluirTarefa = (i) => {
+            listaTarefas[i].concluido = !listaTarefas[i].concluido
+            atualizarTarefas()
+        }
+
+        inputNovaTarefa.addEventListener('keyup', (evt) => {
+            if (evt.keyCode === 13 /* Enter */) {
+                addTarefa()
+            }
+        })
+    </script>
+</body>
+</html>
